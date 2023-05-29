@@ -41,7 +41,6 @@ class SortingAlgorithm():
         if(n>1):
             r=n//2
             L=self.age[:r]
-            print(L)
             M=self.age[r:]
             
             i=k=j=0
@@ -61,7 +60,7 @@ class SortingAlgorithm():
                 self.age[k]=M[j]
                 j+=1
                 k+=1  
-        print(self.age,"According to merge sort")
+        print(L,M,"According to merge sort")
     def quick_sort(self):
         n= len(self.age)    
         pivot=self.age[-1]
@@ -121,7 +120,68 @@ class SortingAlgorithm():
                     j-=gap
                 self.age[j]=temp
             gap//=2
-        print(self.age,"shell sort")            
+        print(self.age,"shell sort")       
+    def bucket_sort(self):
+        n = self.length
+        slot_num = 10  # 10 means 10 slots, each slot's size is 0.1
+        buckets = [[] for _ in range(slot_num)]
+
+        # Put array elements in different buckets
+        for num in self.age:
+            index_b = int((num - min(self.age)) / (max(self.age) - min(self.age)) * (slot_num - 1))
+            buckets[index_b].append(num)
+
+        # Sort individual buckets using insertion sort
+        for i in range(slot_num):
+            # Perform insertion sort on the current bucket
+            for j in range(1, len(buckets[i])):
+                key = buckets[i][j]
+                k = j - 1
+                while k >= 0 and buckets[i][k] > key:
+                    buckets[i][k + 1] = buckets[i][k]
+                    k -= 1
+                buckets[i][k + 1] = key
+
+        # Concatenate the sorted buckets
+        sorted_list = []
+        for bucket in buckets:
+            sorted_list.extend(bucket)
+
+        self.age = sorted_list
+        print(self.age,"bucket sort")
+
+
+    
+    def radix_sort(self):
+        max_num = max(self.age)
+        exp = 1
+
+        while max_num // exp > 0:
+            n = len(self.age)
+            output = [0] * n
+            count = [0] * 10
+
+            for i in range(n):
+                index = (self.age[i] // exp) % 10
+                count[index] += 1
+
+            for i in range(1, 10):
+                count[i] += count[i - 1]
+
+            i = n - 1
+            while i >= 0:
+                index = (self.age[i] // exp) % 10
+                output[count[index] - 1] = self.age[i]
+                count[index] -= 1
+                i -= 1
+
+            for i in range(n):
+                self.age[i] = output[i]
+
+            exp *= 10
+
+        print(self.age,"radix sort")
+
 
 
 
@@ -136,6 +196,11 @@ while True:
     print("3 - insertion Sort")
     print("4 - Merge Sort")
     print("5 - Quick Sort")
+    print("6 - Count Sort")
+    print("7 - Shell Sort")
+    print("8 - BucketSort")
+    print("9 - Radix Sort")
+
 
 
 
@@ -183,6 +248,22 @@ while True:
         sorting_algorithm = SortingAlgorithm()
 
         sorting_algorithm.shell_sort() 
+        break 
+    elif select==8:
+    # sorting_algorithm.take_input()
+        sorting_algorithm = SortingAlgorithm()
+
+        sorting_algorithm.bucket_sort() 
+
+
+        break 
+    elif select==9:
+    # sorting_algorithm.take_input()
+        sorting_algorithm = SortingAlgorithm()
+
+        sorting_algorithm.radix_sort() 
+
+
         break 
           
         
